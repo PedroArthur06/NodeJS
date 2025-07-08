@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Formulário Simples</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 500px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+      form {
+        background: #f5f5f5;
+        padding: 20px;
+        border-radius: 8px;
+      }
+      input,
+      textarea {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+        border: 1px solid #ddd;
+      }
+      button {
+        background: #4caf50;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        cursor: pointer;
+      }
+      .message {
+        margin-top: 10px;
+        padding: 10px;
+        border-radius: 4px;
+      }
+      .success {
+        background: #d4edda;
+        color: #155724;
+      }
+      .error {
+        background: #f8d7da;
+        color: #721c24;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Formulário Simples</h1>
+    <form id="meuFormulario">
+      <div>
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome" required />
+      </div>
+      <div>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required />
+      </div>
+      <button type="submit">Salvar Dados</button>
+    </form>
+    <div id="mensagem" class="message"></div>
+
+    <script>
+      const form = document.getElementById("meuFormulario");
+      const mensagem = document.getElementById("mensagem");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const formData = {
+          nome: form.nome.value,
+          email: form.email.value,
+        };
+
+        try {
+          const response = await fetch("/salvar", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            mensagem.textContent = "Dados salvos com sucesso!";
+            mensagem.className = "message success";
+            form.reset();
+          } else {
+            mensagem.textContent = "Erro: " + result.message;
+            mensagem.className = "message error";
+          }
+        } catch (error) {
+          mensagem.textContent = "Erro na comunicação com o servidor";
+          mensagem.className = "message error";
+        }
+      });
+    </script>
+  </body>
+</html>
