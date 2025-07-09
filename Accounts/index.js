@@ -1,8 +1,8 @@
 const inquirer = require('inquirer').default;
-const chalk = require('chalk');
+const chalk = require('chalk').default;
 const fs = require('fs');
 
-console.log("Projeto iniciado");
+console.log(chalk.blue("Projeto iniciado"));
 
 operation();
 
@@ -11,8 +11,14 @@ function operation() {
     {
       type: 'list',
       name: 'action',
-      message: 'O que você deseja fazer?',
-      choices: ['Criar uma conta', 'Consultar saldo', 'Depositar', 'Sacar', 'Sair'],
+      message: chalk.yellow('O que você deseja fazer?'),
+      choices: [
+        'Criar uma conta',
+        'Consultar saldo',
+        'Depositar',
+        'Sacar',
+        'Sair'
+      ],
     },
   ])
   .then((answer) => {
@@ -21,47 +27,40 @@ function operation() {
       createAccount();
     }
   })
-  .catch((err) => console.log(err));
-  }
-
-function createAccount() {
-  console.log('Obrigado por escolher os nossos serviços!');
-  console.log('Defina as opções da sua conta a seguir');
-  
-  buildAccount()
+  .catch((err) => console.log(chalk.red(err)));
 }
 
-function buildAccount(){
+function createAccount() {
+  console.log(chalk.green('Obrigado por escolher os nossos serviços!'));
+  console.log(chalk.green('Defina as opções da sua conta a seguir'));
+  
+  buildAccount();
+}
+
+function buildAccount() {
   inquirer.prompt([
     {
-      name:'accountName',
-      message: 'Insira um nome para a sua conta'
+      name: 'accountName',
+      message: chalk.cyan('Insira um nome para a sua conta')
     }
   ])
   .then((answer) => {
-    const accountName = answer['accountName']
-    console.info(accountName)
+    const accountName = answer['accountName'];
+    console.info(chalk.magenta(`Nome da conta: ${accountName}`));
 
-    if(!fs.existsSync('accounts')){
-      fs.mkdirSync('accounts')
+    if (!fs.existsSync('accounts')) {
+      fs.mkdirSync('accounts');
     }
 
-    if(!fs.existsSync(`accounts/${accountName}.json`)){
-      console.log("Essa conta ja existe, escolha outro nome")
-    buildAccount()
-    return
+    if (fs.existsSync(`accounts/${accountName}.json`)) {
+      console.log(chalk.red("Essa conta já existe, escolha outro nome"));
+      buildAccount();
+      return;
     }
     
-    fs.writeFileSync(`accounts/${accountName}.json`, `{"balance": 0}`,
-      function(err){
-        console.log(err)
-      },
-    )
-    console.log('Parabéns! Conta criada com sucesso')
-    operation()
+    fs.writeFileSync(`accounts/${accountName}.json`, `{"balance": 0}`);
+    console.log(chalk.green('Parabéns! Conta criada com sucesso'));
+    operation();
   })
-  .catch(err => console.log(err))
+  .catch(err => console.log(chalk.red(err)));
 }
-
-
-   
