@@ -45,6 +45,20 @@ function buildAccount(){
     if(!fs.existsSync('accounts')){
       fs.mkdirSync('accounts')
     }
+
+    if(!fs.existsSync(`accounts/${accountName}.json`)){
+      console.log("Essa conta ja existe, escolha outro nome")
+    buildAccount()
+    return
+    }
+    
+    fs.writeFileSync(`accounts/${accountName}.json`, `{"balance": 0}`,
+      function(err){
+        console.log(err)
+      },
+    )
+    console.log('Parabéns! Conta criada com sucesso')
+    operation()
   })
   .catch(err => console.log(err))
 }
