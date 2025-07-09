@@ -1,4 +1,4 @@
-const inquirer = require('inquirer')
+const inquirer = require('inquirer').default;
 const chalk = require('chalk')
 const fs = require('fs')
 
@@ -7,8 +7,7 @@ console.log("Projeto iniciado")
 operation()
 
 function operation(){
-  inquirer
-  .prompt([
+  inquirer.prompt([
     {
     type: 'list',
     name: 'action',
@@ -17,7 +16,14 @@ function operation(){
     },
   ]).then((ansewr) => {
     const action = ansewr['action']
-    console.log(action)
+    if(action === 'Criar uma conta'){
+      createAccount()
+    }
   })
   .catch((err) => console.log(err))
+}
+
+function createAccount(){
+  console.log(chalk.bgGreen.black('Obrigado por escolher os nossos serviços!'))
+  console.log(chalk.green('Defina as opções da sua conta a seguir'))
 }
