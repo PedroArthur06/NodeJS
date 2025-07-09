@@ -29,7 +29,7 @@ function operation() {
     }else if (action === 'Consultar saldo'){
 
     }else if (action === 'Depositar'){
-
+      deposit()
     }else if (action === 'Sacar'){
 
     }else{
@@ -73,4 +73,32 @@ function buildAccount() {
     operation();
   })
   .catch(err => console.log(chalk.red(err)));
+}
+
+function deposit(){
+
+  inquirer.prompt([
+    {
+      name: 'accountName',
+      message: 'Qual o nome da sua conta?'
+    }
+  ])
+  .then((answer) => {
+    const accountName = answer['accountName']
+
+    if (!checkAccount(accountName)){
+      return deposit()
+    }
+  })
+  .catch(err => console.log(err))
+
+}
+
+function checkAccount(accountName){
+
+  if(!fs.existsSync(`accounts/${accountName}.json`)){
+    console.log(chalk.bgRed.black("Conta não encontrada"))
+    return false
+  }
+  return true
 }
