@@ -23,8 +23,18 @@ function operation() {
   ])
   .then((answer) => {
     const action = answer['action'];
+
     if (action === 'Criar uma conta') {
       createAccount();
+    }else if (action === 'Consultar saldo'){
+
+    }else if (action === 'Depositar'){
+
+    }else if (action === 'Sacar'){
+
+    }else{
+      console.log(chalk.bgBlue.black('Obrigado por usar o Accounts !'))
+      process.exit()
     }
   })
   .catch((err) => console.log(chalk.red(err)));
