@@ -31,7 +31,7 @@ function operation() {
     }else if (action === 'Depositar'){
       deposit()
     }else if (action === 'Sacar'){
-
+      withdraw();
     }else{
       console.log(chalk.bgBlue.black('Obrigado por usar o Accounts !'))
       process.exit()
@@ -159,4 +159,54 @@ getAccountBalance = () => {
     operation();
   })
   .catch(err => console.log(chalk.red(err)));
+}
+
+withdraw = () => {
+  inquirer.prompt([
+    {
+      name: 'accountName',
+      message: 'Qual o nome da sua conta?'
+    }
+  ])
+  .then((answer) => {
+    const accountName = answer['accountName'];
+
+    if (!checkAccount(accountName)){
+      return withdraw();
+    }
+
+    inquirer.prompt([
+      {
+        name: 'amount',
+        message: 'Insira o valor a ser sacado:'
+      }
+    ]).then((answer) => {
+      const amount = answer['amount'];
+      removeAmount(accountName, amount);
+      operation();
+    });
+  })
+  .catch(err => console.log(chalk.red(err)));
+}
+
+function removeAmount(accountName, amount) {
+  const accountData = getAccount(accountName);
+  
+  if (!amount || isNaN(amount) || parseFloat(amount) <= 0) {
+    console.log(chalk.red("Valor inválido!"));
+    return withdraw();
+  }
+
+  if (parseFloat(amount) > accountData.balance) {
+    console.log(chalk.red("Saldo insuficiente!"));
+    return withdraw();
+  }
+
+  accountData.balance -= parseFloat(amount);
+  fs.writeFileSync(`accounts/${accountName}.json`, JSON.stringify(accountData), {
+    encoding: 'utf-8',
+    flag: 'w'
+  });
+
+  console.log(chalk.green(`Saque de R$ ${amount} realizado com sucesso!`));
 }
