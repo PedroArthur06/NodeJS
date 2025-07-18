@@ -11,7 +11,7 @@ app.get('/users/add', (req, res) => {
   res.sendFile(`${basePath}/userForm.html`);
 });
 
-app.post('/users/save', (req, res) => {
+app.post('/user/save', (req, res) => {
   const name = req.body.name;   
   const email = req.body.email;
   console.log(`Usuário salvo: ${name}, email: ${email}`);
